@@ -1,0 +1,17 @@
+{
+  "build": "<name>",
+  "updated_utc": "<date -u +%FT%TZ>",
+  "phase": 0,
+  "owner": "<who owns the server>",
+  "serving": {"up": false, "port": null, "configuration": null, "record_sha256": null},
+  "test_port": null,
+  "memory_line_mib": null,
+  "cards": {"count": null, "model": null, "memory_mib": null, "power_w": null, "clock_cap_mhz": null},
+  "layout": {"stages": null, "tp": null, "cuts": [], "residency": null},
+  "workload": {"prompt_p50": null, "prompt_p90": null, "prompt_max": null, "new_tokens_p50": null,
+               "new_tokens_p90": null, "generated_per_task": null, "one_request_share": null, "source": null},
+  "quality_bar": "<identical | close | free>",
+  "accepted_capture": {"path": null, "sha256": null},
+  "unknowns": [{"field": "<name>", "settle_with": "<command or question>"}],
+  "next": "<one line>"
+}

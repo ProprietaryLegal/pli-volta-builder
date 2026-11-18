@@ -1,0 +1,13 @@
+{
+  "name": "pli-volta-builder",
+  "version": "0.1.0",
+  "description": "Build, serve, test and optimize a large model on Tesla V100 (Volta, sm_70) and other older NVIDIA cards, phase by phase, with the gates PLI Labs used for Volta sPLIt, Volta Max uPLIft and Volta 12X AmPLIfy.",
+  "author": {
+    "name": "PLI Labs",
+    "url": "https://github.com/ProprietaryLegal"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/ProprietaryLegal/volta-v100-research",
+  "repository": "https://github.com/ProprietaryLegal/pli-volta-builder",
+  "keywords": ["v100", "volta", "sm70", "vllm", "1cat-vllm", "moe", "deepseek", "inference", "gpu-kernels", "benchmarking"]
+}

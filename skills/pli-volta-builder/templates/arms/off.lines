@@ -1,0 +1,4 @@
+# NAME<TAB>COMMAND, one acceptance line per row, copied from the amendment written before the data.
+# exit 0 PASS, 1 FAIL, 3 (or anything else) INCONCLUSIVE.
+b-identity	python3 tools/capture.py --port $PORT --out receipts/off.json && python3 tools/identity_judge.py accepted/capture.json receipts/off.json
+d-memory	python3 tools/rehearsal.py --port $PORT --samples receipts/off-mem.csv && python3 tools/mem_sampler.py judge receipts/off-mem.csv --cards 12 --stages 0-3,4-7,8-11 --line 31800

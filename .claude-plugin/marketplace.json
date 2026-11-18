@@ -1,0 +1,18 @@
+{
+  "name": "pli-volta-builder",
+  "description": "PLI Labs: the PLI Volta Builder skill",
+  "owner": {
+    "name": "PLI Labs",
+    "url": "https://github.com/ProprietaryLegal"
+  },
+  "plugins": [
+    {
+      "name": "pli-volta-builder",
+      "source": "./",
+      "description": "Build, serve, test and optimize a large model on Tesla V100 (Volta, sm_70) and other older NVIDIA cards, phase by phase, with the gates PLI Labs used for its Volta builds.",
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/ProprietaryLegal/pli-volta-builder",
+      "author": {"name": "PLI Labs", "url": "https://github.com/ProprietaryLegal"}
+    }
+  ]
+}

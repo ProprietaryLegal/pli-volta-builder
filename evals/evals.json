@@ -1,0 +1,26 @@
+{
+  "skill_name": "pli-volta-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "new-model-eight-v100",
+      "prompt": "I've got 8x V100 SXM2 32GB on two NVLink boards (4+4, boards joined over PCIe), 768GB RAM, dual Xeon. I want to serve GLM-5.1-Air (the MoE one) on it for long-document work, mostly one request at a time with 80-150k token prompts. Build it and make it as fast as you can without hurting quality. I'm the only user; you can run stuff on the box over ssh.",
+      "expected_output": "Phase 0 state file with hardware/model/workload/quality fields and UNKNOWNs with settling commands; phase 1 sweep of 1Cat-vLLM SM70 PRs and v100-skinny with an overlap table before any plan; phase 2 arithmetic for bytes per card and legal cuts; then the proven upstream recipe launched before any optimization; owner settled (the user) before touching cards; no download of another quant without asking.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "first-build-four-turing-cards",
+      "prompt": "first time doing this. i have 4 rtx 2080 ti 11gb (blower cards, pcie only, no nvlink) in an old supermicro box. can i run qwen3.8-27b on them at decent speed? set it up and tune it. no idea what quant to use",
+      "expected_output": "Recognizes Turing sm_75 (not Volta): reads the neighbours table and checks upstream support for sm_75 instead of assuming Volta facts; layout arithmetic for 4 x 11 GB with PCIe-only tensor parallel; recommends a pack by bytes with upstream evidence; asks only what the machine cannot tell; launches a proven recipe first.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "next-optimization-existing-build",
+      "prompt": "Our 12x V100 DeepSeek server (three pipeline stages of four) is in production and stable. The repo has BUILD-STATE.md and PLAN.md with amendments through 39. Find the next optimization and run it.",
+      "expected_output": "Resumes from BUILD-STATE.md and the newest amendments instead of restarting; goes to phase 9 (or 6 if the ranked list has items) with the time budget and upstream-since-base sweep; writes an amendment with lines and predictions before any window; one change per boot against a same-window off reference; adopts only via an adopt boot; respects the serving record and the owner.",
+      "files": []
+    }
+  ]
+}

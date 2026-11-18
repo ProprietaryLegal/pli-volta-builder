@@ -1,0 +1,5 @@
+# One shell check per line; BOOT_LOG is the arm's boot log. Certify each pattern on a real log first
+# (scripts/log_patterns.py certify). Exit 0 = PASS.
+test "$(grep -c 'worker .* ready' "$BOOT_LOG")" -eq 12
+! grep -q 'Traceback' "$BOOT_LOG"
+test "$(grep -c 'memory limit set' "$BOOT_LOG")" -eq 12
