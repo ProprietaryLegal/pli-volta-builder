@@ -7,6 +7,11 @@ launch the proven recipe first; validate pieces only if the launch misbehaves.
 
 ## Do (the owner session only; the hardware owner's word for the first boot on that machine)
 
+0. If something already serves on these cards: checkpoint it first (its tree, launcher, profile and serving
+   record, frozen and recorded so it can be restored exactly), and build the new one beside it, never inside it.
+   Each variant (another precision, another layout, an extra card, another engine) is its own build with its own
+   tree, launch option or repository, so the serving build and its public page stay clean. Where a smaller test
+   machine with the same cards exists, bring the new build up there first.
 1. Install the fork at the recipe's commit in the build's OWN tree (never inside another build's tree or
    environment), its environment pinned (CUDA 12.x; a PyTorch wheel whose `torch.cuda.get_arch_list()` includes your card's architecture: sm_70 for Volta, sm_75
    for Turing). Downloading the weights of

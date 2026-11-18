@@ -20,14 +20,23 @@ optimization".
    cache, a conversation store that survives restarts, a shared document cache), the turn sizes (a turn pipeline
    across stages), how many requests overlap (batched decode only if overlap is common), what the drafter accepts
    on the workload's text (draft depth, drafting mode).
-5. **Other engines and other hardware.** The DGX Spark and newer-card recipes for ideas (drafting, expert pruning,
-   overlap of communication with compute), checked against sm_70's limits and against your numerics.
+5. **Other engines and other hardware.** Recipes for other hardware (unified-memory boxes such as the DGX Spark,
+   newer cards) for ideas (drafting, expert pruning, overlap of communication with compute), checked against your
+   card's limits and your numerics. When an idea that won there does not carry over, explain why in your card's
+   terms (separate host and card memory instead of unified memory, the PCIe or NVLink bandwidth between stages, no
+   tensor cores for that format, a different bottleneck in your time budget), so the owner does not have to ask.
+5b. **A better whole package upstream.** At every pass, check whether the engine fork (or another engine) now ships a
+   complete package for this model that is better than the one being tuned. Moving to it can be worth more than any
+   lever on the old engine; it becomes a new build (phase 3), not an edit of this one.
 6. **Papers and model-author write-ups** for the model's own structure (sparse attention indexes, hybrid caches,
    multi-token prediction).
 7. **What was rejected before.** Re-read the closed list with its numbers: a lever lost under another condition may
    win under this one; say which condition changed.
 
 ## Turn a finding into a candidate
+
+Prefer an existing, usable solution over a complicated new one. Say plainly whether an idea is novel or already
+done elsewhere, and give an honest speed estimate with its reason, not the most hopeful one.
 
 For each: what it changes; the place in the time budget it attacks; the most it can save per unit (speed of light or
 measured interval) and per task (units from the workload); exact or rounding-moving; the upstream row or "own"; the

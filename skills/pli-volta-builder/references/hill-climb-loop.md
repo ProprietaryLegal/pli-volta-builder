@@ -65,6 +65,14 @@ median-of-repeats sweeps on public prompt text.
 5. When the ladder is exhausted: phase 9 for new sized candidates, appended to the ladder; the fingerprints keep the
    old ones from running again on the same base.
 
+## Against over-testing
+
+The loop is a search, not a re-measurement service. Launch the proven recipe before starting it (phase 3). Each
+candidate is run once on a base; the fingerprints stop it from running again. A result that is decided (adopted, or a
+loss with its numbers) is not re-proven in later windows "to be sure"; if a condition changes, the candidate states
+its `retry_reason`. When the ladder runs low, the next step is phase 9's search for new levers, not more decimal
+places on the last one.
+
 ## What it does not decide
 
 Whether a change that moves rounding is acceptable at all, whether to stop a server others use, which power limit to

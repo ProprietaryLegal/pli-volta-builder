@@ -45,8 +45,21 @@ each candidate before it enters the ladder. Its design and gates: `../hill-climb
 - Use the small test machine and CPU helpers in parallel (within the owner's number), the big machine for windows.
 - A failed or inconclusive round is the next hypothesis: name the cause, fix the cause (often the probe or the
   judge, not the change), run again next window. No round limit. No new gate for each failure.
+- A test exists to decide something. Do not re-prove a known result window after window; once a lever is decided,
+  record it and move to the next. Search for the next lever (phase 9) rather than re-measuring the last one more
+  precisely.
+- With a standing install permission, install what passes in the order that avoids redoing work: changes that touch
+  the same files are built on the base they will install over, and the change that replaces most files goes last.
+- A variant that is not a change of the serving build (another precision, layout, engine, an extra card) is its own
+  build in its own tree or repository, with its own launch option; production is checkpointed before any install.
 - Mid-campaign, NOTHING changes in what serves outside a window: a change of kit, profile, switch, slots or memory
   limit is a new amendment and makes the serving record stale.
+
+## Regression watch
+
+If the serving build becomes slower or wrong (a user notices, or the regression cell fails), stop routing work to it
+until its owner reports it fixed WITH a measured speed; a message that a window closed is not that report. Then find
+which change did it from the record of what was installed when.
 
 ## Writes
 

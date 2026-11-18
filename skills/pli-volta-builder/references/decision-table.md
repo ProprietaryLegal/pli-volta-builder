@@ -24,4 +24,11 @@ who owns the hardware; tell the owner the numbers and wait only where the row sa
 | Several requests at once are rare in the workload | Rank single-request latency and decode first; batched decode last | Optimize the sum over many requests because a benchmark does |
 | The owner asks to publish | One boundary check with the owner's deny list and one privacy read, then publish; fix wording after | Hold it for review rounds |
 | A sub-agent is useful | Brief it (`templates/LANE-BRIEF.md`) for CPU work or an assigned test card; it reports to the owner | Let it touch the serving server |
+| A test port or a server only the owner uses | Run the window; tell the owner the result | Ask permission for each window |
+| Stopping a server other people or programs use | Give them notice, wait for an idle moment; the owner's word unless a standing one covers it | Stop it mid-request |
+| The owner gave a standing permission | Write it in BUILD-STATE.md with its date and limits; act on it | Ask again for what it covers |
+| A variant of the serving build (precision, layout, engine, extra card) | A separate build and launch option; checkpoint production first | Edit the serving build in place |
+| The serving build got slower or wrong | Stop routing work to it until its owner reports a measured fix | Keep sending work and hope |
+| The model does not fit at the wanted precision, MoE | Mixed precision by measured expert use (`expert-promotion.md`) | Compress every expert the same way without asking why |
+| A result is already decided | Record it; search for the next lever | Re-prove it next window |
 | Idle test cards | Put the next machine-testable candidate on them | Leave them idle while candidates wait |

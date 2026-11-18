@@ -44,8 +44,7 @@ the official MXFP4); community packs for small cards. Read each card's quantizat
   eight V100s, as much of the routed work as fits at NVFP4.
 - [Volta Full NVFP4](https://github.com/ProprietaryLegal/Volta-Full-NVFP4-DeepSeek-V4.1-Flash-8xV100): eight V100s,
   every routed expert at NVFP4, the less-used read from host memory.
-- Volta 12X AmPLIfy (twelve V100s, three stages of four, every routed expert at NVFP4 on the cards): described on the
-  hub; its own repository is not yet published.
+- [Volta 12X AmPLIfy](https://github.com/ProprietaryLegal/Volta-12X-AmPLIfy-DeepSeek-V4.1-Flash-1017-NVFP4-12xV100-SXM2-PP3xTP4): twelve V100s, three stages of four, every routed expert at NVFP4 on the cards.
 - Earlier: [deepseek-v4-flash-v100](https://github.com/ProprietaryLegal/deepseek-v4-flash-v100),
   [deepseek-v4.1-v100](https://github.com/ProprietaryLegal/deepseek-v4.1-v100),
   [swift-1.5-v100](https://github.com/ProprietaryLegal/swift-1.5-v100); mirrors
@@ -74,6 +73,9 @@ gh pr view <N> -R 1CatAI/1Cat-vLLM --json title,body,state,author,mergedAt,files
 # what is new since your engine's base (phase 9)
 gh pr list -R 1CatAI/1Cat-vLLM --search "merged:>YYYY-MM-DD" --state merged --limit 200 --json number,title
 gh issue list -R 1CatAI/1Cat-vLLM --search "V100 OR SM70" --state all --limit 100
+# the fork's own forks (people often keep Volta work there), and the discussion under a pull request
+gh api repos/1CatAI/1Cat-vLLM/forks --paginate --jq '.[] | [.full_name, .pushed_at] | @tsv' | sort -k2 -r | head -40
+gh pr view <N> -R 1CatAI/1Cat-vLLM --comments
 # a repository's tree without cloning everything
 git clone --depth 1 --filter=blob:none --sparse <url> && git -C <dir> sparse-checkout set <path>
 ```

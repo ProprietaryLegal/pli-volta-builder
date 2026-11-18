@@ -98,7 +98,7 @@ reports. It labels every number MEASURED, UPSTREAM or ESTIMATE and never present
 - [Volta sPLIt](https://github.com/ProprietaryLegal/Volta-sPLIt-DeepSeek-V4.1-Flash-1017-8xV100-SXM2-PP2xTP4): eight V100s, two stages.
 - [Volta Max uPLIft](https://github.com/ProprietaryLegal/Volta-Max-uPLIft-FP4-DeepSeek-V4.1-Flash-1017-NVFP4-8xV100-SXM2-PP2xTP4): eight V100s, as much routed work as fits at NVFP4.
 - [Volta Full NVFP4](https://github.com/ProprietaryLegal/Volta-Full-NVFP4-DeepSeek-V4.1-Flash-8xV100): eight V100s, every routed expert at NVFP4, the less-used from host memory.
-- Volta 12X AmPLIfy: twelve V100s, three stages, every routed expert at NVFP4 on the cards (described on the hub; its repository is not yet published).
+- [Volta 12X AmPLIfy](https://github.com/ProprietaryLegal/Volta-12X-AmPLIfy-DeepSeek-V4.1-Flash-1017-NVFP4-12xV100-SXM2-PP3xTP4): twelve V100s, three stages, every routed expert at NVFP4 on the cards.
 
 Credits: [CREDITS.md](CREDITS.md). Licence: Apache-2.0 ([LICENSE](LICENSE)).
 

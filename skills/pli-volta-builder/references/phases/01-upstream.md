@@ -12,6 +12,11 @@ re-built by accident and no capability question is answered from first principle
    `../upstream-sources.md`). For each relevant one read the body: what it does, its measured numbers, the hardware,
    power, batch, parallel layout and flags they were measured under, its state.
 3. Sweep the kernel repositories (v100-skinny and others) and the model author's and vendor's cards.
+   Go wide, as the owner of the PLI builds always sent their sessions: the fork's own forks, its pull-request comments
+   and review threads (not only the bodies), the vendor's developer forums, community forums and non-English
+   communities, the repositories of people known for this hardware, whole-engine alternatives (another serving stack
+   that could replace the current one, not only patch it), and sister builds' lists of what was tried and failed on
+   other hardware.
 4. Read the published PLI builds closest to your case (same model family, same card count) and their credits.
 5. For other hardware's recipes (newer cards, other engines), list ideas only, each with the hardware assumption
    that would have to hold on yours.

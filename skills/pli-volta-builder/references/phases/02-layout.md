@@ -24,12 +24,17 @@
    board, pipeline across boards. Cards with no NVLink at all pay for every tensor-parallel all-reduce over PCIe on
    every layer: keep both the best tensor-parallel and the best pipeline layout as candidates and let phase 3's
    baseline (or the upstream recipe's figures for that card) decide.
-5. **Show what is not possible**, with the arithmetic (for example: "every routed expert at NVFP4 is 278.9 GiB of
+5. **Answer the card-count what-ifs first, as a table**, before any build: for 8, 10, 12 (or whatever counts the
+   owner could reach) cards, what fits at each precision, the share of experts at the higher precision, the host
+   memory left for lookup tables, and a speed ESTIMATE with its basis. Owners ask these before they buy or rewire.
+   If the model does not fit at the precision wanted, consider mixed precision by measured expert use
+   (`../expert-promotion.md`).
+6. **Show what is not possible**, with the arithmetic (for example: "every routed expert at NVFP4 is 278.9 GiB of
    records; eight 32 GB cards hold 254 GiB; it does not fit on eight cards; twelve hold it at 24.40 / 24.40 / 20.92
    GiB per card on three stages", ARITHMETIC from the twelve-card build's plan).
-6. **Choose** the layout with margin under the memory line at the slot count and context the workload needs, and
+7. **Choose** the layout with margin under the memory line at the slot count and context the workload needs, and
    the board order (which board holds which stage; keep the first hand-off inside one PCIe switch where possible).
-7. Estimate speed only as an ESTIMATE with its basis (an upstream figure on a similar layout, scaled with the
+8. Estimate speed only as an ESTIMATE with its basis (an upstream figure on a similar layout, scaled with the
    arithmetic shown).
 
 ## Writes

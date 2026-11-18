@@ -11,6 +11,8 @@ finding changed the plan; none had been visible from inside.
 
 ## Do
 
+0. The reviewer researches first: the card's architecture, the engine fork's pull requests and the kernel
+   repositories (`../upstream-sources.md`), so its findings rest on the same base knowledge the build should have.
 1. Choose a reviewer that did not build it: another model or another person, at high effort, READ-ONLY (no server,
    no card, no write outside its own folder).
 2. Hand it the whole record (`templates/REVIEWER-BRIEF.md`): the plan with every amendment, the time budget, the
@@ -20,6 +22,9 @@ finding changed the plan; none had been visible from inside.
    output) for each finding.
 3. **The owner re-runs or re-reads each finding before acting on it,** and writes in the next amendment which
    findings were re-run, which read, and what changes. A finding is evidence to check, not an order.
+   Ask also, separately: every lever upstream claims as a win that this build measured as a loss or no gain. Scrutinize
+   those hardest: was the port faithful, was the measurement able to see the gain, did a condition differ? "Re-checked,
+   the loss stands, no basis to retry" is a valid answer; write it next to the loss in the lever table.
 4. Act: fix judges before the next window; re-check historical results the finding touches (keep those that stand,
    say so); re-rank the candidate list; hold a change until its boundary case is proven.
 

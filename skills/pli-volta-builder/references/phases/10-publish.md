@@ -31,6 +31,24 @@
    independent privacy read. Then publish and give the owner the link. Fix wording in follow-up commits; do not hold
    the release for review rounds.
 
+## The public page (the order owners of these builds asked for)
+
+1. **Speed headline first**: decode tok/s for one request (and several together, if concurrency is on) by content
+   type, at the context lengths users run, and the longest context that works. Then the long-prompt table (prompt
+   reading and first token at each length). Then accuracy (closeness to the reference, with the reference named).
+   Short; detail and history move to other files; sections that do not apply are removed.
+2. **Describe the build on its own.** Never score one of the owner's builds against another in public text (no "x
+   faster than our other build", no "slower than"). A build's own before and after, its own configurations, and
+   upstream's figures with their sources are fine.
+3. **Name:** offer about five names in the pattern the owner's earlier builds use; the owner picks.
+4. **Byline:** the owner's byline and site link on every page, card and model upload, exactly as on the earlier ones.
+5. **Upstream:** send the wins AND the failed attempts to the engine fork and the kernel repository, as pull requests
+   or issues with their measured numbers and conditions, so others can build on them; check those pull requests'
+   status later and answer reviews.
+6. **Maintain** the public repository: fix simple reported issues; keep the figures current after a close-out bench.
+7. **Posts** (forums, social media) only when the owner asks, in the owner's voice, as past posts show it, and none
+   when the owner says not to.
+
 ## Writes
 
 The formal repository, the public tree when ordered, the hub entry (a link and a summary).

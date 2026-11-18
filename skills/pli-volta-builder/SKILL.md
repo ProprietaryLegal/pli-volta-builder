@@ -34,9 +34,10 @@ Read the phase file before doing a phase; each says what to collect, what to wri
 
 | Phase | Entry | What you do | What you write | Gate to the next | Read |
 |---|---|---|---|---|---|
-| 0 Intake | a request, no state | hardware, topology, model, formats, the workload's shape, the quality bar, the owner | BUILD-STATE.md, state.json, AGENTS/CLAUDE from templates | every field filled or UNKNOWN with the command that settles it | `references/phases/00-intake.md` |
+| 0 Intake | a request, no state | hardware, topology, model, formats, the workload's shape, the owner's objectives and bars, standing permissions | BUILD-STATE.md, state.json, AGENTS/CLAUDE from templates | every field filled or UNKNOWN with the command that settles it | `references/phases/00-intake.md` |
+| 0b Hardware readiness | intake | link width and NVLink per card, power budget per circuit, faults; hardware settings as measured levers the owner applies | the hardware table in BUILD-STATE.md | every card at its expected link, no open fault | `references/phases/00b-hardware.md` |
 | 1 Upstream first | state exists | sweep the engine fork, kernel repos, model cards, PLI builds | the overlap table (AGENTS.md section 0), the nearest proven recipe | table exists; no capability claim from first principles | `references/phases/01-upstream.md`, `references/upstream-sources.md` |
-| 2 Layout arithmetic | phases 0-1 | bytes per layer per card, legal cuts, residency, what is NOT possible | PLAN.md sections 1-6 | one layout under the memory line with margin, cuts cited | `references/phases/02-layout.md` |
+| 2 Layout arithmetic | phases 0-1 | bytes per layer per card, legal cuts, residency, card-count what-ifs, mixed precision by measured expert use, what is NOT possible | PLAN.md sections 1-6 | one layout under the memory line with margin, cuts cited | `references/phases/02-layout.md`, `references/expert-promotion.md` |
 | 3 First light | a layout and a recipe | launch the proven recipe unchanged; smoke; baseline; first capture | PLAN result amendment, real boot logs kept | a server answers correctly; a baseline exists | `references/phases/03-first-light.md` |
 | 4 Harness | first light | window driver, chains, serving record, strict judges, rehearsal, A/A bands | window/, tools/, tests/, docs/OPERATIONS.md, the accepted capture | serves by the pair rule; every judge and pattern met real data | `references/phases/04-harness.md`, `references/testing-method.md` |
 | 5 Time budget | harness works | profile reads, turns, decode rounds at the workload's shape; intersect intervals; weigh by measured per-task totals | research/TIME-BUDGET.md, ranked candidates | first candidates sized in seconds per task | `references/phases/05-time-budget.md`, `references/workload-weighting.md` |
@@ -76,18 +77,25 @@ before each one, even mid-loop, even when a script could do it, because in every
 the owner's decisions and nobody else's:
 1. **Anything that changes a power limit, a clock cap or another hardware setting** (BIOS, cabling, PCIe or ACS
    settings, card placement): the risk is to hardware and power supplies only the owner can judge.
-2. **Stopping a server other people use**: they get notice first, and a stop waits for an idle moment.
+2. **Stopping or restarting what other people or other programs are using**: they get notice first, a stop waits
+   for an idle moment, and the owner's word is needed unless the owner has already given a standing one. A test on
+   the test port, or a window on a server only the owner uses, needs no ask once the goal is set: the owner says
+   when the machine is needed for other work.
 3. **Publishing anything** (a repository, a model upload, a post): it is the owner's name and the owner's data
    boundary.
 4. **Spending on a new download or new hardware** (weights other than the model the owner named, a new pack, cards,
    memory): it costs the owner money, disk or time.
 `scripts/hill_climb.py` enforces the same four through `owner_keys`: it stops with WAITING-OWNER.
+**Standing permissions.** At intake, and whenever the owner gives one, write the standing permissions into
+`BUILD-STATE.md` (for example: "test windows need no ask", "install what passes, in this order", "publish when the
+campaign closes"), with the date and their limits. While one holds, do not stop to ask again for what it covers.
 
 ## Standing rules (every phase; reasons in `references/standing-rules.md`)
 
 1. One owner per server and per card; helpers work on CPU, on copies, or on cards the owner assigned them.
-2. The owner's word before installing into a serving tree or starting on a card; test windows themselves need no
-   permission once the goal is set.
+2. The owner's word (or a standing permission) before installing into a serving tree; test windows need no
+   permission once the goal is set. Variants are separate builds (own tree or repository), never edits of what
+   serves; checkpoint production before any install; test on the small test machine first where one exists.
 3. Crash rule: on a new Xid line or an unplanned reset, stop nothing, start nothing, send nothing; report; wait.
 4. Power, clocks and hardware are the owner's. Never edit a script a running job executes. Kill only what you
    started. No GPU identifiers in any file.
@@ -98,14 +106,19 @@ the owner's decisions and nobody else's:
 9. Every pattern a check applies to a log meets a real log of that boot kind first (`scripts/log_patterns.py`).
 10. Label every number MEASURED (hardware, power, runs), UPSTREAM (link, conditions) or ESTIMATE (arithmetic).
 11. Compare like with like: same window, same power, a reference in the right arithmetic; speed bands from A/A.
-12. Tests go through the server's real entry point and the workload's real shape; public text only in test prompts.
+12. Tests go through the server's real entry point and replay the owner's real workload on the owner's machines;
+    only what will be published (or shared logs) is limited to public text.
 13. Launch the proven recipe before validating pieces; install what upstream measured on correctness and stability.
 14. Switch on only what is proven: passed alone, then again in the whole configuration (`adopt`); a window ends
     serving what it proved.
 15. Rank by seconds saved per task of the measured workload, not by a benchmark.
-16. Persist: a failed round is the next hypothesis, no round limit; but fix causes, never stack new gates.
-17. Keep test cards busy; match model and effort to the task; launch only the helpers the work needs.
-18. State files and amendments so any new session can resume; report built / tested / proven / optimized / next.
+16. Persist: a failed round is the next hypothesis, no round limit; but fix causes, never stack new gates. A test
+    exists to decide something: launch the proven recipe first, never re-prove a known result window after window,
+    and search for the next lever instead of re-measuring the last one.
+17. Keep test cards busy; match model and effort to the task; launch only the helpers the owner's number allows and
+    the work needs; respect the owner's usage ceiling and report cadence.
+18. State files and amendments so any new session can resume; a hand-off is written, read, checked against the live
+    state and acknowledged (`references/standing-rules.md` rule 28).
 19. Publish when the owner asks, after one boundary check and one privacy read.
 
 ## Scripts (CPU, Python 3 standard library and bash; each has `--self-test` with hand-worked values)
@@ -142,6 +155,16 @@ Tell the user that list is the next step. Never claim a figure you did not measu
 
 ## Reporting to the owner
 
-Lead with the answer. Then: what is built, what is tested, what is proven (passed its written lines on the real
+Lead with the answer, and with what the owner asks first: tok/s and context. Speed in tables (no clock times in
+them, so they can become graphics): prefill and decode at each normal context length, decode by content type (code,
+structured output, prose, chat, the owner's own domain), several requests together where concurrency is on, each
+change as a percent against the build's own reference. Then: what is built, what is tested, what is proven (passed its written lines on the real
 cards), what is optimized (serving now, with the measured gain and its conditions), what failed and why, what is
-next and its expected size (ESTIMATE). Numbers labelled. Times from the clock.
+next and its expected size (ESTIMATE). Numbers labelled. Times from the clock. Never score one of the owner's builds
+against another in anything public.
+
+## Closing a campaign
+
+The owner decides when returns have diminished. On the owner's word: a final bench at every normal context and concurrency,
+the documents and the public page updated (phase 10), wins and failed attempts sent upstream, and the list of what is
+left with each item's size, so the next campaign starts from it.

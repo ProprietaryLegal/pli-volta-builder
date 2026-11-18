@@ -29,7 +29,8 @@ Model
   AWQ); their bytes per weight and which tensors each keeps at full precision (read each `quantization_config`).
 - What the engine fork already supports for this model (phase 1 confirms).
 
-Workload (aggregates only; never copy a user's text)
+Workload (the shape as aggregates for planning; the owner's real requests are replayed later, on the owner's own
+machines, for private measurements; none of it goes into anything published)
 - Prompt length per request: median, 90th percentile, maximum.
 - New tokens per turn on a continued chat; how often a request begins with the previous request's whole prompt.
 - Generated tokens per task, reasoning included, counted directly (not requests x median answer).
@@ -38,12 +39,23 @@ Workload (aggregates only; never copy a user's text)
 - If no measurement exists, say so and plan to instrument the router or client first; until then rank candidates
   with the uncertainty written next to each.
 
+Objectives and bars (ask the owner; write each with the date)
+- What matters first: decode speed (and thinking-mode decode), prompt reading, time to first token on a grown chat,
+  several requests together, context length, quality.
+- The bars: the decode tok/s needed for one request, the minimum context length that must work, the concurrency
+  wanted by default and the single-request cost accepted for it (report that cost every time concurrency is on).
+- What "done" looks like, so the campaign can be closed on the owner's word (SKILL.md, "Closing a campaign").
+- How reports are wanted (tables, percent changes, by content type) and how often; the owner's usage ceiling for agents; the
+  number of helpers allowed.
+
 Quality bar
 - bit-identical to a reference build; close (closeness lines on public prompts); or free (any speed-up the owner
   accepts after seeing a quality comparison). Write which reference stands for "the model" (phase 4).
 
 Owner's settings
-- Who owns the server; the users and the notice they get before a stop; the serving port and the test port; the
+- Standing permissions the owner gives (test windows without asking, installing what passes in a stated order, publishing
+  at close-out): write each into `BUILD-STATE.md` with its date and limits, so no step stops to ask twice.
+- Who owns the server; the users and the programs that depend on it, and the notice they get before a stop; the serving port and the test port; the
   memory line (the most a card may hold under serving); the owner's number for parallel helpers.
 - If the owner has no memory line, propose one and record it as the owner's decision once agreed: the PLI builds kept
   410 to 512 MiB free on 32 GB V100s (lines of 31,998 and 32,100 MiB of 32,510), and judged serving candidates
@@ -56,7 +68,7 @@ Owner's settings
   copy: `phase`, `owner`, `serving`, `test_port`, `memory_line_mib`, `cards`, `layout`, `workload`, `quality_bar`, `unknowns`, `next`).
 - The build's `AGENTS.md` and `CLAUDE.md` from the templates, with section 0 (front-line facts) started.
 
-## Gate to phase 1
+## Gate to phase 0b (then phase 1)
 
 Every field filled or marked UNKNOWN with its settling command. The owner named (and, if this session is not the owner,
 how the owner's word reaches it).

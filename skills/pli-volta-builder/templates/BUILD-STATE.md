@@ -10,6 +10,19 @@ log's last entries. Keep it to one screen.
 - Window running: <none / TAG, chain, started at>.
 - Xid count at last read: <n> (<time>).
 
+## Objectives, bars and standing permissions (phase 0; the owner's words, dated)
+- What matters first: <decode / thinking decode / prompt reading / first token / several together / context / quality>.
+- Bars: one-request decode <tok/s>; minimum context <tokens>; default concurrency <n> and the single-request cost
+  accepted for it <percent>.
+- Standing permissions: <"test windows need no ask" (date)>, <"install what passes, in this order" (date, limits)>,
+  <"publish at close-out" (date)>.
+- Reports: <format, cadence>; usage ceiling: <...>; helpers allowed: <n>.
+
+## Hardware readiness (phase 0b)
+| Card | Board | Link now / capable | NVLink | Temp under load | Faults |
+|---|---|---|---|---|---|
+- Power budget per supply and circuit: <...>. Hardware levers proposed / applied by the owner / measured: <...>.
+
 ## Owner and helpers
 - Owner of the server and its cards: <session or person>. Only the owner boots, stops, sends requests, runs on cards.
 - Helpers and what each may touch: <name: CPU only / test machine cards 0-3 / read-only>.

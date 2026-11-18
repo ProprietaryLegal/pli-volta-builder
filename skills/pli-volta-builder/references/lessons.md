@@ -100,3 +100,39 @@ ABBA decides; never drop a lever on a microbenchmark alone.
   request; another nearly shipped a drafting mode upstream had measured as worse. The overlap table prevents both.
 - **A slowdown nobody caught.** A change once made the serving build much slower and the owner noticed before the
   campaign did. Keep a regression cell (one short and one long request, timed) in every serving check.
+
+## The road to the builds, briefly, and what each step taught
+
+From the PLI Labs public repositories; each step links to its record.
+
+1. **A general engine first** ([deepseek-v4-flash-v100](https://github.com/ProprietaryLegal/deepseek-v4-flash-v100):
+   a llama.cpp recipe for DeepSeek-V4-Flash on V100s, with quantized-KV fixes). It ran, which was the point at the
+   time. Taught: a general engine's layer split across many old cards leaves the cards' fast paths unused; look for a
+   fork built for the card before tuning a general one.
+2. **The card's own fork, on one board**
+   ([swift-1.5-v100](https://github.com/ProprietaryLegal/swift-1.5-v100): a Qwen3.8-27B-family model on four V100s
+   with the stock 1Cat-vLLM wheel). Taught: the Volta fork's documented recipe works as published; tensor parallel
+   inside one NVLink board, never across boards; a vendor's mixed-precision export can load with no conversion when
+   the fork already supports it.
+3. **A community engine for a new model**
+   ([deepseek-v4.1-v100](https://github.com/ProprietaryLegal/deepseek-v4.1-v100): a 1Cat-vLLM-based engine by
+   philbert440 with EXL3 experts, two stages of four cards). Taught: start a new model from the person who already
+   brought it up on the card; host memory can hold what does not fit (lookup tables resident in RAM); old hosts show
+   hardware faults under this load (PCIe completion-timeout resets, memory errors that stopped at a lower memory
+   speed), so the hardware phase is not optional.
+4. **Moving when upstream moves** ([Volta sPLIt](https://github.com/ProprietaryLegal/Volta-sPLIt-DeepSeek-V4.1-Flash-1017-8xV100-SXM2-PP2xTP4):
+   1Cat-vLLM's own complete package for the model, #1277, ported to two stages; the engine the later builds descend
+   from). Taught: when the fork ships a complete package for your model, porting it can be worth more than any
+   lever on the engine you were tuning; re-check for that at every research pass.
+5. **Precision where it counts** ([Volta Max uPLIft](https://github.com/ProprietaryLegal/Volta-Max-uPLIft-FP4-DeepSeek-V4.1-Flash-1017-NVFP4-8xV100-SXM2-PP2xTP4)):
+   the experts that carry most decode routes at the higher precision, the rest compressed. Taught: measured expert
+   use beats uniform compression when memory is short (`expert-promotion.md`), and closeness must be measured
+   against the full higher-precision model with the reference's own repeat as the noise floor.
+6. **Exact precision with host memory** ([Volta Full NVFP4](https://github.com/ProprietaryLegal/Volta-Full-NVFP4-DeepSeek-V4.1-Flash-8xV100)):
+   every expert at the higher precision, the less-used read from host memory. Taught: an exact layout that is slow
+   is still valuable as the quality reference for the faster ones.
+7. **More cards** ([Volta 12X AmPLIfy](https://github.com/ProprietaryLegal/Volta-12X-AmPLIfy-DeepSeek-V4.1-Flash-1017-NVFP4-12xV100-SXM2-PP3xTP4): twelve V100s in three stages, every expert at the higher precision on the
+   cards). Taught: when the answer to "does not fit" is more memory, a deeper pipeline brings its own correctness
+   work (the scheduling lesson above) and its own time budget.
+
+Every step was a separate build with its own tree and repository; none was an edit of the one that served.

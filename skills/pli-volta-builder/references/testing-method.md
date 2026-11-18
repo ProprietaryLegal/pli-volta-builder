@@ -97,7 +97,11 @@ From the workload's measured shape (aggregates only, phase 0): prompt lengths at
 maximum; new tokens per turn; generated tokens per task (reasoning included); how often one, two or more requests
 run at once; how often a request begins with the previous one's whole prompt. Build cells for each: a first read at
 the common packet size, turns of the common and the 90th-percentile size on a grown chat, a turn beside another
-chat's long read, decode at short and long context, all slots grown at once. Use public text of those lengths.
+chat's long read, decode at short and long context, all slots grown at once. Cells whose prompts, captures or logs
+will be shared use public text of those lengths. Beside them, the measurement that claims the workload replays the
+owner's real requests on the owner's machines (the owner's own conversations, through the client the owner uses, in their real
+order), and its receipts stay there. Report decode by content type (code, structured output, prose, chat, the owner's
+domain): acceptance of a drafter, and so tok/s, differs by kind of text.
 Check every turn cell is a prefix hit in the server log; a turn read cold is not a turn cell (INCONCLUSIVE).
 
 ## 8. The small test machine
