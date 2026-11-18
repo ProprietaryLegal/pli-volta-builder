@@ -21,7 +21,7 @@ another layout or another card count misleads: measure this one.
    - the front of a request (API arrival to scheduled): template, tokenization, hashing, hand-over. On a long-context
      workload the front can be a large share of a turn's first token: one build spent 3 to 3.4 microseconds per
      prompt token there on every request, most of it tokenizing the whole prompt again (MEASURED).
-3. **Weigh by the workload.** Units per task from phase 0's measured totals: decode rounds per task = generated
+3. **Weigh by the workload** (the rule and the instrument checklist: `../workload-weighting.md`). Units per task from phase 0's measured totals: decode rounds per task = generated
    tokens / tokens per round; prompt chunks per task from first reads; turns per task. Seconds per task for each
    item = its time per unit x units.
 4. **Write candidates** with a size: for each place the time goes, the levers (from phase 1's table first, then

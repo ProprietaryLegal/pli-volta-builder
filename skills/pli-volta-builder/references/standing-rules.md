@@ -25,6 +25,10 @@ that person's. The failures behind the rules are told in `lessons.md`.
 5. **Power, clocks and hardware are the owner's.** Never change a power limit, clock cap, BIOS setting or cable
    without the owner's word. A power cap throttles SM clocks, not the HBM clock: prompt reading (compute) gains from a
    higher cap far more than decode (bandwidth) does.
+5a. **The owner's four gates.** Stop and ask before: (1) changing any power, clock or other hardware setting;
+   (2) stopping a server other people use; (3) publishing anything; (4) spending on a new download or new hardware.
+   *Why:* in all three Volta builds these were the owner's decisions and nobody else's; automation, including
+   `scripts/hill_climb.py` (its `owner_keys`), stops at them with WAITING-OWNER.
 6. **Never edit a script a running job executes.** Install a new file under a new name and point the next chain
    at it; keep the old one as `<file>.before-<commit>`. *Why:* bash reads a script as it runs; an edit in place
    changes the running job's next lines.

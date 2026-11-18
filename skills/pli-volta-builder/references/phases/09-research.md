@@ -31,7 +31,8 @@ optimization".
 
 For each: what it changes; the place in the time budget it attacks; the most it can save per unit (speed of light or
 measured interval) and per task (units from the workload); exact or rounding-moving; the upstream row or "own"; the
-effort; what could make it fail. Add it to the ranked list and go to phase 6.
+effort; what could make it fail. Add it to the ranked list and go to phase 6: append it to the hill-climb ladder
+(`climb.json`) in rank order; the loop's fingerprints keep candidates already run on this base from running again.
 
 ## Writes
 

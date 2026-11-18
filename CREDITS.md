@@ -17,6 +17,9 @@ agent to start from it.
 | DeepSeek | DeepSeek-V4.1-Flash, DeepGEMM, FlashMLA | https://huggingface.co/deepseek-ai, https://github.com/deepseek-ai | The model the builds served; kernel ideas |
 | NVIDIA | Volta architecture whitepaper, PTX ISA, CUDA documentation, the NVFP4 pack of DeepSeek-V4.1-Flash-1017 | https://docs.nvidia.com/cuda/ | Facts about the card; the expert weights of the NVFP4 builds |
 | gilby | volta-nvfp4 | https://github.com/gilby/volta-nvfp4 | Upstream sweep list |
+| 0xSero | `bench/hillclimb.py` of Inkling-Small-2-Sparks: the hill-climb driver design (step / measure / status, JSON state and JSONL history, one-setting candidate ladder with reasons, safety rails, revert on boot failure, quality as a hard gate, contended runs not comparable). Adapted (rewritten, generic, with our gates on top) in `skills/pli-volta-builder/scripts/hill_climb.py` under Apache-2.0 | https://github.com/0xSero/Inkling-Small-2-Sparks (Apache-2.0) | The automated loop of phase 6 (`references/hill-climb-loop.md`) |
+| 0xSero | Sweep outcome states (valid, rejected, unsupported, unrun, infrastructure-invalid) and frozen run manifests: the idea only, no code (the repository has no licence file) | https://github.com/0xSero/omarchy-local-intelligence | Recording losses and run identity |
+| 0xSero | Median-of-repeats speed sweeps on public prompt text: the practice, no code copied | https://github.com/0xSero/inkling2-exl3 (MIT) | Testing method |
 | Anthropic | The Agent Skills format and skill-creator guidance | https://github.com/anthropics/skills | The skill's structure |
 
 PLI Labs' own: the campaign method (phases, gates, the amendment form, the pair rule, the lessons), the scripts in

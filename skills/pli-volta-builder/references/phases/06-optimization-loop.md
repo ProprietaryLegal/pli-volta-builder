@@ -32,6 +32,13 @@ go as fast as possible but do not sacrifice the quality of optimizations.
 8. **Record wins and losses** with numbers in the lever table and the result amendment. A loss recorded saves the
    next session from re-proposing it.
 
+## Automation
+
+`scripts/hill_climb.py` runs steps 2 and 6 to 8 as a loop: it writes each candidate's amendment before its data
+(`rule`), runs one change against a same-run reference (`step`), and adopts the passing set together (`adopt`). Steps
+1, 3, 4 and 5 (the upstream row, the switch and kit, the CPU tests, the small-machine rehearsal) are still yours for
+each candidate before it enters the ladder. Its design and gates: `../hill-climb-loop.md`.
+
 ## Pace
 
 - Batch variants that are ready into one window; do not hold a ready variant for one that is hours away.

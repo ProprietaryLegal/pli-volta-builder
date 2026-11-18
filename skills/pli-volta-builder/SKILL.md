@@ -39,8 +39,8 @@ Read the phase file before doing a phase; each says what to collect, what to wri
 | 2 Layout arithmetic | phases 0-1 | bytes per layer per card, legal cuts, residency, what is NOT possible | PLAN.md sections 1-6 | one layout under the memory line with margin, cuts cited | `references/phases/02-layout.md` |
 | 3 First light | a layout and a recipe | launch the proven recipe unchanged; smoke; baseline; first capture | PLAN result amendment, real boot logs kept | a server answers correctly; a baseline exists | `references/phases/03-first-light.md` |
 | 4 Harness | first light | window driver, chains, serving record, strict judges, rehearsal, A/A bands | window/, tools/, tests/, docs/OPERATIONS.md, the accepted capture | serves by the pair rule; every judge and pattern met real data | `references/phases/04-harness.md`, `references/testing-method.md` |
-| 5 Time budget | harness works | profile reads, turns, decode rounds at the workload's shape; intersect intervals; weigh by measured units | research/TIME-BUDGET.md, ranked candidates | first candidates sized in seconds per task | `references/phases/05-time-budget.md` |
-| 6 Optimization loop | ranked list | per candidate: amendment before data, default-off switch, CPU tests through the real entry point, rehearsal, one change per boot, adopt | amendments, lever table, changelog | repeats; go to 7, 8 or 9 as named in the file | `references/phases/06-optimization-loop.md` |
+| 5 Time budget | harness works | profile reads, turns, decode rounds at the workload's shape; intersect intervals; weigh by measured per-task totals | research/TIME-BUDGET.md, ranked candidates | first candidates sized in seconds per task | `references/phases/05-time-budget.md`, `references/workload-weighting.md` |
+| 6 Optimization loop | ranked list | per candidate: amendment before data, default-off switch, CPU tests through the real entry point, rehearsal, one change per boot, adopt; automated by `scripts/hill_climb.py` | amendments, lever table, changelog, the loop's history | repeats; go to 7, 8 or 9 as named in the file | `references/phases/06-optimization-loop.md`, `references/hill-climb-loop.md` |
 | 7 Kernels | a kernel is the top item | upstream kernels first, size, numerics contract, adversarial tests, end-to-end window | kit, tests, lever row, upstream PR | the window of phase 6 decides | `references/phases/07-kernels.md`, `references/kernel-building.md` |
 | 8 Independent review | after the budget; every few windows; before release | hand the whole record to a reviewer who did not build it | the review, the amendment acting on it | judge findings fixed and re-run on real receipts | `references/phases/08-review.md`, `templates/REVIEWER-BRIEF.md` |
 | 9 Research | the list runs dry, or "find the next optimization" | upstream since base, the budget again, idle hardware, the workload's structure, other engines, papers, the closed list | new sized candidates | each has a size and enters phase 6 | `references/phases/09-research.md` |
@@ -57,15 +57,31 @@ strict judges and A/A bands, but phase 4 can be the identity judge, the memory s
 hand, and windows can be short. Never drop: upstream first, the memory line, INCONCLUSIVE-is-not-a-pass, labelled
 numbers.
 
-**Other card generations.** The method is the same; the facts are not. For Turing (sm_75) or Pascal (sm_60/61) read
-the neighbours table in `references/volta-facts.md`, check what the engine fork supports for that compute capability
-in phase 1 before planning, and re-derive the speed-of-light figures from that card's bandwidth and tensor-core
-formats. Cards without NVLink pay for tensor-parallel all-reduces over PCIe on every layer: measure the best
+**Any card generation.** Phases 0 to 6 and 8 to 10 are the same for any cards; only two files are Volta-specific:
+`references/volta-facts.md` (the pinned facts) and `references/kernel-building.md` (sm_70 kernels). Phase 0 asks
+which generation the build faces; when it is not Volta, say so plainly to the user ("the pinned Volta facts do not
+apply to these cards; I will establish this card's facts in phase 1"), read the neighbours table in
+`volta-facts.md`, check in phase 1 what the engine fork supports for that compute capability, write the card's own
+section 0 facts with sources, and re-derive the speed-of-light figures from its bandwidth and tensor-core formats. Cards without NVLink pay for tensor-parallel all-reduces over PCIe on every layer: measure the best
 tensor-parallel and the best pipeline layout both before choosing.
 
 `references/decision-table.md` answers the common forks ("upstream measured it", "a line came back INCONCLUSIVE",
 "two candidates conflict", "a new Xid line"). `references/lessons.md` tells what went wrong before and what each
 failure taught; read it before designing a harness or a window.
+
+## The owner's four gates: STOP and ask, in every phase
+
+The skill automates everything else. These four stay with the person who owns the hardware, and you stop and ask
+before each one, even mid-loop, even when a script could do it, because in every one of the three builds these were
+the owner's decisions and nobody else's:
+1. **Anything that changes a power limit, a clock cap or another hardware setting** (BIOS, cabling, PCIe or ACS
+   settings, card placement): the risk is to hardware and power supplies only the owner can judge.
+2. **Stopping a server other people use**: they get notice first, and a stop waits for an idle moment.
+3. **Publishing anything** (a repository, a model upload, a post): it is the owner's name and the owner's data
+   boundary.
+4. **Spending on a new download or new hardware** (weights other than the model the owner named, a new pack, cards,
+   memory): it costs the owner money, disk or time.
+`scripts/hill_climb.py` enforces the same four through `owner_keys`: it stops with WAITING-OWNER.
 
 ## Standing rules (every phase; reasons in `references/standing-rules.md`)
 
@@ -100,6 +116,7 @@ failure taught; read it before designing a harness or a window.
 | `scripts/serving_record.py` | the pair rule: write the record after a full check; refuse to serve on a stale one |
 | `scripts/identity_judge.py` | strict token identity of two captures |
 | `scripts/closeness_judge.py` | first divergence, margin and mean dlogprob for changes that move rounding |
+| `scripts/hill_climb.py` | the automated loop of phase 6: one change per run against a same-run reference, strict gates, adopt together, resumable, losses recorded (`references/hill-climb-loop.md`) |
 | `scripts/speed_band.py` | A/A bands and ABBA paired deltas |
 | `scripts/mem_sampler.py` | card memory samples during a rehearsal, judged against the memory line |
 | `scripts/timebudget_parse.py` | step intervals (union, intersection), kernel time by kind, candidate ranking |

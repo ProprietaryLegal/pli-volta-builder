@@ -9,6 +9,10 @@ question that will settle it.
 ## Collect (read-only commands; ask the owner only what the machine cannot tell you)
 
 Hardware
+- Generation first: the compute capability (`nvidia-smi --query-gpu=name,compute_cap --format=csv`). Volta is
+  7.0. If it is anything else, tell the user plainly that the pinned facts in `volta-facts.md` and the sm_70 kernel
+  rules do not apply, and that phase 1 will establish this card's facts from its vendor documents and the engine
+  fork's support for it. The rest of the method applies unchanged.
 - Cards: model, memory per card, count. `nvidia-smi --query-gpu=index,name,memory.total,power.limit,clocks.max.sm --format=csv`
   (index, never UUID, in any file you may share).
 - Topology: `nvidia-smi topo -m` (which cards share NVLink, which only PCIe), `lspci -tv` (switches, host bridges),

@@ -42,6 +42,17 @@ mkdir -p ~/.claude/skills && cp -r pli-volta-builder/skills/pli-volta-builder ~/
 bash ~/.claude/skills/pli-volta-builder/tests/run_all.sh     # the scripts' self-tests, CPU only
 ```
 
+Both Claude Code and Codex from a clone, in one command (copies the skill folder to `~/.claude/skills/` and
+`~/.codex/skills/`; idempotent; refuses to replace a different skill of the same name without `--force`):
+
+```bash
+git clone --depth 1 https://github.com/ProprietaryLegal/pli-volta-builder && cd pli-volta-builder
+./install.sh --both --test        # or --claude, or --codex; --dry-run shows what it would write
+```
+
+Codex reads the same folder layout (`SKILL.md` with `name` and `description`) and also `agents/openai.yaml` for its
+skill list; invoke it as `$pli-volta-builder` or let it trigger.
+
 For another agent, point it at `skills/pli-volta-builder/SKILL.md`; everything else is plain Markdown and scripts it
 loads when a phase needs them. The scripts need Python 3 (standard library) and bash; nothing runs on a GPU unless
 you run it there.
@@ -69,11 +80,12 @@ Agent: (phase 0) reads nvidia-smi topo, the model's config and pack options; ask
 |---|---|
 | `skills/pli-volta-builder/SKILL.md` | The skill: when to use it, the campaign map, the standing rules, pointers |
 | `skills/pli-volta-builder/references/` | One file per phase (`phases/`), the Volta facts, upstream sources, kernel building, testing method, lessons, decision table, standing rules with their reasons |
-| `skills/pli-volta-builder/scripts/` | Generic templates with self-tests: window driver, serving record, identity and closeness judges, speed bands, memory sampler, time-budget parser, log-pattern certifier, data-boundary check |
+| `skills/pli-volta-builder/scripts/` | Generic templates with self-tests: the automated hill-climb loop, window driver, serving record, identity and closeness judges, speed bands, memory sampler, time-budget parser, log-pattern certifier, data-boundary check |
 | `skills/pli-volta-builder/templates/` | BUILD-STATE, state.json, PLAN with the amendment form, AGENTS, CLAUDE with pinned sections, OPERATIONS, helper and reviewer briefs, CREDITS, the window configuration, a chain and an arm |
 | `skills/pli-volta-builder/tests/` | `run_all.sh`: every self-test and the driver's CPU test |
 | `evals/evals.json` | Three realistic requests the skill was read against |
 | `.claude-plugin/` | Plugin and marketplace manifests |
+| `install.sh` | One-command install for Claude Code and Codex |
 
 ## What it will not do on its own
 

@@ -2,5 +2,8 @@ PLI Volta Builder
 Copyright 2026 PLI Labs (Proprietary Legal Intelligence)
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
-It contains no third-party source code. Third-party projects it refers to are listed in CREDITS.md
-under their own licences.
+
+skills/pli-volta-builder/scripts/hill_climb.py is derived in part from bench/hillclimb.py of
+https://github.com/0xSero/Inkling-Small-2-Sparks by 0xSero, licensed under the Apache License, Version 2.0;
+the derived file says so at its top. The product contains no other third-party source code.
+Third-party projects it refers to are listed in CREDITS.md under their own licences.
