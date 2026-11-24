@@ -27,7 +27,7 @@ THE GATES (what an automatic hill-climb lacks for a serving build, and the PLI c
   3. Quality is judged by a strict judge inside the measure command (identity for exact changes, closeness for
      changes that move rounding); FAIL is a loss however fast; INCONCLUSIVE is never a win.
   4. A speed difference counts only beyond the run's band: the larger of the run's own A/A spread and the adoption
-     cutoff, `cutoff_pct` of the reference (default 1.6 %, the owner's figure of 2026-11-24); a gain inside the band
+     cutoff, `cutoff_pct` of the reference (default 1.8 %, the owner's figure of 2026-11-24); a gain inside the band
      is WITHIN BAND.
   5. Every metric the config names must be present in every arm; a missing one is INCONCLUSIVE.
   6. Adopt only what passed alone AND passed again together (`adopt`), with no metric worse beyond its band.
@@ -42,7 +42,7 @@ CONFIG (JSON):
    "metrics": {"decode_ms": {"units_per_task": 4000, "scale_s": 0.001},    # time per unit, lower is better;
                "read_ms_per_ktok": {"units_per_task": 120, "scale_s": 0.001}},  # seconds/task = value*units*scale
    "min_gain_s": 1.0,                                   # least seconds saved per task worth adopting
-   "cutoff_pct": 1.6,                                   # adoption cutoff, percent of the reference (default 1.6)
+   "cutoff_pct": 1.8,                                   # adoption cutoff, percent of the reference (default 1.8)
    "order": "ABBA",                                     # or "AB" with "bands": {"metric": band} from phase 4's A/A
    "owner_keys": ["POWER_W", "CLOCK_MHZ"],
    "rails": [["KV_BYTES", ">=", 18500000000]],          # checked on base+change before anything runs
@@ -65,7 +65,7 @@ import subprocess
 import sys
 import time
 
-CUTOFF_PCT = 1.6  # adoption cutoff, percent of the reference (owner, 2026-11-24)
+CUTOFF_PCT = 1.8  # adoption cutoff, percent of the reference (owner, 2026-11-24)
 STATUSES = ("PASS-ALONE", "FAIL", "INCONCLUSIVE", "WITHIN BAND", "BOOT-FAIL", "UNSAFE", "WAITING-OWNER",
             "SKIPPED-TRIED", "ADOPTED", "ADOPT-FAIL", "ADOPT-INCONCLUSIVE")
 
@@ -291,11 +291,11 @@ def self_test():
 
     Settings x and y (integers). Time per unit (ms) t(x, y) = 10 + (x - 3)^2 + (y - 1)^2, so the optimum is
     x = 3, y = 1 with t = 10. The measured value wobbles by +0.1 / -0.1 on alternate reference arms, so an ABBA run's
-    A/A spread is 0.2 ms; the 1.6 % cutoff of the reference 20 is 0.32 ms, so the band is 0.32 ms. units_per_task
+    A/A spread is 0.2 ms; the 1.8 % cutoff of the reference 20 is 0.36 ms, so the band is 0.36 ms. units_per_task
     1000, scale 0.001: one ms per unit = one second per task.
     Base (0, 0): t = 10 + 9 + 1 = 20.
       A  x=3      -> t(3,0) = 11: 9 ms faster  -> 9 s/task      PASS-ALONE
-      B  y=1      -> t(0,1) = 19: 1 ms faster (beyond 0.32) -> 1 s/task      PASS-ALONE
+      B  y=1      -> t(0,1) = 19: 1 ms faster (beyond 0.36) -> 1 s/task      PASS-ALONE
       J  y=1 with cutoff_pct 6 (band 1.2 ms > 1 ms): WITHIN BAND  (checked separately below)
       C  y=2      -> fast (t = 5) but the quality judge says FAIL                           FAIL
       D  x=5      -> t(5,0) = 15: 5 s/task, same key as A, smaller: passes alone but A stays in the set

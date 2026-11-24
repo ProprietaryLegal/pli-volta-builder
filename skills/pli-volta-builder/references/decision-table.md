@@ -19,7 +19,7 @@ who owns the hardware; tell the owner the numbers and wait only where the row sa
 | The serving record does not match the trees | Run the full check on the test port first | Boot the public port on hope |
 | A check's pattern is new or a kit adds log lines | `log_patterns.py certify` on real logs of that boot kind | Trust a CPU test with synthetic logs |
 | The plan runs dry | Phase 9 research; an independent review (phase 8) | Re-run the same windows for more decimal places |
-| Speed difference near the band | ABBA in one window; report "within band" if it stays inside max(the A/A spread, the 1.6 % cutoff) | Call a win from one run; adopt a gain under 1.6 % because it beat the spread |
+| Speed difference near the band | ABBA in one window; report "within band" if it stays inside max(the A/A spread, the 1.8 % cutoff) | Call a win from one run; adopt a gain under 1.8 % because it beat the spread |
 | The small test machine shows a gain | Order the big window by it | Adopt on it |
 | Several requests at once are rare in the workload | Rank single-request latency and decode first; batched decode last | Optimize the sum over many requests because a benchmark does |
 | The owner asks to publish | One boundary check with the owner's deny list and one privacy read, then publish; fix wording after | Hold it for review rounds |

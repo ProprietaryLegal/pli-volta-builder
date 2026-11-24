@@ -69,5 +69,5 @@ from which record), the changelog.
 ## Gate
 
 There is no gate out of this phase: it repeats. Go to phase 7 when the top candidate is a kernel, phase 8 at the
-review points, phase 9 when the ranked list's remaining items are each worth less than the band (the 1.6 % cutoff or
+review points, phase 9 when the ranked list's remaining items are each worth less than the band (the 1.8 % cutoff or
 the A/A spread, whichever is larger).

@@ -10,7 +10,7 @@ and logs: <paths>, the workload's aggregate shape: <path>, AGENTS.md section 0 (
 
 ## Questions
 1. What did we measure wrong? (A figure compared across conditions; totals compared where intervals overlap; a
-   weight or unit taken from a product of medians; a speed claim inside the A/A band or under the 1.6 % cutoff.)
+   weight or unit taken from a product of medians; a speed claim inside the A/A band or under the 1.8 % cutoff.)
 2. Which judge could pass something it should not? Try it: truncate an answer, drop a cell, repeat a key, edit a
    prompt at a boundary, feed a cold turn as a hit. Report each with a witness script and its output.
 3. Which prediction rests on a figure that does not support it?

@@ -77,7 +77,7 @@ prediction held or wrong (keep the wrong ones), what the window retired from "ne
 
 - Report ms per decode round beside tok/s: tokens per round vary with the text when a drafter is on.
 - The band is the larger of the A/A spread (two runs of the unchanged build in the same window) and the adoption
-  cutoff, 1.6 % of the reference (the owner's figure, 2026-11-24; `speed_band.py band`). A difference inside the band
+  cutoff, 1.8 % of the reference (the owner's figure, 2026-11-24; `speed_band.py band`). A difference inside the band
   is "within band", reported, not a verdict and not adopted. The twelve-card build's read cells spread 0.6 to 1.0 %
   and its decode cells under 0.5 %, so the cutoff usually sets the band there; a cell whose spread exceeds the cutoff
   (its decode at 128K context spread 20 %) decides nothing until its spread is measured smaller.
