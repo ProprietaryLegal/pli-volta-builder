@@ -56,7 +56,7 @@ go to phase 9. Either way the first thing you write is the amendment, before any
 record, the full harness. A single-user box still gets phases 0 to 3 whole, the overlap table, rules before data,
 strict judges and A/A bands, but phase 4 can be the identity judge, the memory sampler and the speed cells run by
 hand, and windows can be short. Never drop: upstream first, the memory line, INCONCLUSIVE-is-not-a-pass, labelled
-numbers.
+numbers, the 1.6 % adoption cutoff.
 
 **Any card generation.** Phases 0 to 6 and 8 to 10 are the same for any cards; only two files are Volta-specific:
 `references/volta-facts.md` (the pinned facts) and `references/kernel-building.md` (sm_70 kernels). Phase 0 asks
@@ -106,6 +106,10 @@ campaign closes"), with the date and their limits. While one holds, do not stop 
 9. Every pattern a check applies to a log meets a real log of that boot kind first (`scripts/log_patterns.py`).
 10. Label every number MEASURED (hardware, power, runs), UPSTREAM (link, conditions) or ESTIMATE (arithmetic).
 11. Compare like with like: same window, same power, a reference in the right arithmetic; speed bands from A/A.
+    **Adoption cutoff 1.6 %** (the owner, 2026-11-24): a change is adopted only when its target figure gains more than
+    max(1.6 % of the reference, the window's A/A spread) and no other cell loses more than that band; a smaller gain is
+    "within band", recorded, not installed. Scripts and judges carry it (`speed_band.py --cutoff-pct`, `hill_climb.py`
+    `cutoff_pct`).
 12. Tests go through the server's real entry point and replay the owner's real workload on the owner's machines;
     only what will be published (or shared logs) is limited to public text.
 13. Launch the proven recipe before validating pieces; install what upstream measured on correctness and stability.
@@ -130,7 +134,7 @@ campaign closes"), with the date and their limits. While one holds, do not stop 
 | `scripts/identity_judge.py` | strict token identity of two captures |
 | `scripts/closeness_judge.py` | first divergence, margin and mean dlogprob for changes that move rounding |
 | `scripts/hill_climb.py` | the automated loop of phase 6: one change per run against a same-run reference, strict gates, adopt together, resumable, losses recorded (`references/hill-climb-loop.md`) |
-| `scripts/speed_band.py` | A/A bands and ABBA paired deltas |
+| `scripts/speed_band.py` | A/A bands with the 1.6 % adoption cutoff, and ABBA paired deltas |
 | `scripts/mem_sampler.py` | card memory samples during a rehearsal, judged against the memory line |
 | `scripts/timebudget_parse.py` | step intervals (union, intersection), kernel time by kind, candidate ranking |
 | `scripts/log_patterns.py` | certify every pattern on real logs before it guards a window |

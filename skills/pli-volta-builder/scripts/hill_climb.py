@@ -26,7 +26,9 @@ THE GATES (what an automatic hill-climb lacks for a serving build, and the PLI c
   2. One change per run, against a reference measured in the same run, never against a stored best score.
   3. Quality is judged by a strict judge inside the measure command (identity for exact changes, closeness for
      changes that move rounding); FAIL is a loss however fast; INCONCLUSIVE is never a win.
-  4. A speed difference counts only beyond the run's own A/A band; a gain inside the band is WITHIN BAND.
+  4. A speed difference counts only beyond the run's band: the larger of the run's own A/A spread and the adoption
+     cutoff, `cutoff_pct` of the reference (default 1.6 %, the owner's figure of 2026-11-24); a gain inside the band
+     is WITHIN BAND.
   5. Every metric the config names must be present in every arm; a missing one is INCONCLUSIVE.
   6. Adopt only what passed alone AND passed again together (`adopt`), with no metric worse beyond its band.
   7. Losses are recorded with their numbers; a tried (base, change) pair is never run again unless the config
@@ -40,6 +42,7 @@ CONFIG (JSON):
    "metrics": {"decode_ms": {"units_per_task": 4000, "scale_s": 0.001},    # time per unit, lower is better;
                "read_ms_per_ktok": {"units_per_task": 120, "scale_s": 0.001}},  # seconds/task = value*units*scale
    "min_gain_s": 1.0,                                   # least seconds saved per task worth adopting
+   "cutoff_pct": 1.6,                                   # adoption cutoff, percent of the reference (default 1.6)
    "order": "ABBA",                                     # or "AB" with "bands": {"metric": band} from phase 4's A/A
    "owner_keys": ["POWER_W", "CLOCK_MHZ"],
    "rails": [["KV_BYTES", ">=", 18500000000]],          # checked on base+change before anything runs
@@ -62,6 +65,7 @@ import subprocess
 import sys
 import time
 
+CUTOFF_PCT = 1.6  # adoption cutoff, percent of the reference (owner, 2026-11-24)
 STATUSES = ("PASS-ALONE", "FAIL", "INCONCLUSIVE", "WITHIN BAND", "BOOT-FAIL", "UNSAFE", "WAITING-OWNER",
             "SKIPPED-TRIED", "ADOPTED", "ADOPT-FAIL", "ADOPT-INCONCLUSIVE")
 
@@ -164,8 +168,9 @@ class Climb:
                  f"order {self.cfg.get('order', 'ABBA')}, same run.",
                  f"- LINES: quality {'identity' if c.get('exact', True) else 'closeness'} PASS by the strict judge "
                  f"(FAIL is a loss; INCONCLUSIVE is not a win); every metric of {sorted(self.cfg['metrics'])} present "
-                 f"in every arm; seconds saved per task beyond the run's band and at least {self.cfg.get('min_gain_s', 0)}"
-                 f" s; no metric worse beyond its band.",
+                 f"in every arm; seconds saved per task beyond the run's band (the A/A spread or the "
+                 f"{self.cfg.get('cutoff_pct', CUTOFF_PCT):g} % cutoff, whichever is larger) and at least "
+                 f"{self.cfg.get('min_gain_s', 0)} s; no metric worse beyond its band.",
                  f"- PREDICTED: {json.dumps(c.get('predict', {}))}.",
                  "- ADOPTION: only through `adopt`, together with every other candidate that passed alone."]
         with open(os.path.join(self.dir, "amendments.md"), "a") as f:
@@ -194,11 +199,13 @@ class Climb:
             c = [x.get(m) for x in res[cand_arm]]
             if any(v is None for v in r + c):
                 return "INCONCLUSIVE", {"why": f"metric {m} missing in an arm"}
-            band = (max(r) - min(r)) if order == "ABBA" else self.cfg.get("bands", {}).get(m)
-            if band is None:
+            spread = (max(r) - min(r)) if order == "ABBA" else self.cfg.get("bands", {}).get(m)
+            if spread is None:
                 return "INCONCLUSIVE", {"why": f"no band for {m}: order AB needs bands from an A/A run"}
+            cutoff = abs(sum(r) / len(r)) * float(self.cfg.get("cutoff_pct", CUTOFF_PCT)) / 100
+            band = max(spread, cutoff)
             d = sum(c) / len(c) - sum(r) / len(r)          # time per unit: negative is faster
-            per[m] = {"ref": r, "cand": c, "delta": d, "band": band}
+            per[m] = {"ref": r, "cand": c, "delta": d, "band": band, "spread": spread, "cutoff": cutoff}
             if abs(d) > band:
                 saved_s += -d * w["units_per_task"] * w.get("scale_s", 1.0)
                 if d > 0:
@@ -284,10 +291,12 @@ def self_test():
 
     Settings x and y (integers). Time per unit (ms) t(x, y) = 10 + (x - 3)^2 + (y - 1)^2, so the optimum is
     x = 3, y = 1 with t = 10. The measured value wobbles by +0.1 / -0.1 on alternate reference arms, so an ABBA run's
-    band is 0.2 ms. units_per_task 1000, scale 0.001: one ms per unit = one second per task.
+    A/A spread is 0.2 ms; the 1.6 % cutoff of the reference 20 is 0.32 ms, so the band is 0.32 ms. units_per_task
+    1000, scale 0.001: one ms per unit = one second per task.
     Base (0, 0): t = 10 + 9 + 1 = 20.
       A  x=3      -> t(3,0) = 11: 9 ms faster  -> 9 s/task      PASS-ALONE
-      B  y=1      -> t(0,1) = 19: 1 ms faster  -> 1 s/task      PASS-ALONE
+      B  y=1      -> t(0,1) = 19: 1 ms faster (beyond 0.32) -> 1 s/task      PASS-ALONE
+      J  y=1 with cutoff_pct 6 (band 1.2 ms > 1 ms): WITHIN BAND  (checked separately below)
       C  y=2      -> fast (t = 5) but the quality judge says FAIL                           FAIL
       D  x=5      -> t(5,0) = 15: 5 s/task, same key as A, smaller: passes alone but A stays in the set
       E  POWER_W  -> the owner's key: not run                                              WAITING-OWNER
@@ -346,6 +355,15 @@ def self_test():
             ok = got == want[cid]
             bad += not ok
             print(("ok   " if ok else "FAIL ") + f"{cid}: {got} (want {want[cid]})")
+        # the cutoff: with cutoff_pct 6 the band is 1.2 ms of the reference 20, so B's 1 ms gain is WITHIN BAND
+        cfg6 = dict(cfg, cutoff_pct=6, candidates=[{"id": "J", "key": "y", "value": "1", "predict": {"t_ms": -1}}])
+        d6 = os.path.join(d, "cutoff6"); os.mkdir(d6)
+        json.dump(cfg6, open(os.path.join(d6, "climb.json"), "w"))
+        calls["ref"] = 0
+        cl = Climb(d6, measure); cl.rule(); out = cl.step()
+        ok = out.split(":")[0] == "WITHIN BAND" and '"band": 1.2' in out
+        bad += not ok
+        print(("ok   " if ok else "FAIL ") + f"J (cutoff 6 %): {out[:90]}")
         st = json.load(open(os.path.join(d, "state.json")))
         passed = {p["id"] for p in st["passed"]}
         ok = passed == {"A", "B"}

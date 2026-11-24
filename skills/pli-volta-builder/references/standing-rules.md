@@ -72,7 +72,8 @@ that person's. The failures behind the rules are told in `lessons.md`.
 15. **Compare like with like.** Same window, same power limit, same boot day for speed; a reference in the arm's
     own arithmetic (or an independent higher-precision one) for quality when a change moves rounding on purpose.
     Speed bands are the measured spread between two runs of the unchanged build (A/A), not a guess
-    (`scripts/speed_band.py`).
+    (`scripts/speed_band.py`), with a floor: the adoption cutoff of 1.6 % of the reference (the owner, 2026-11-24).
+    A gain under max(cutoff, spread) is within band and is not installed.
 16. **Read the clock before stating a time** (`date -u`). Times were misstated from memory and had to be corrected
     from transcripts.
 17. **A test tests what the user will use.** CPU tests go through the server's real entry point (two engine kits

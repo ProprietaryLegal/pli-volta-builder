@@ -37,7 +37,7 @@ median-of-repeats sweeps on public prompt text.
 | Their loop | Why it is not enough here | The gate in `hill_climb.py` |
 |---|---|---|
 | Compares a candidate's score with the stored best score from an earlier run | Power, drift and boot-to-boot wobble move the number between runs | Reference and candidate measured in the SAME run (ABBA by default); the band is that run's own A/A spread |
-| Accepts any score above the best | A gain inside the noise is noise | A metric's change counts only beyond the band; a gain below `min_gain_s` per task is WITHIN BAND |
+| Accepts any score above the best | A gain inside the noise is noise, and a gain under the cutoff is not worth a boot | A metric's change counts only beyond the band, max(the run's A/A spread, `cutoff_pct` 1.6 % of the reference); a gain below `min_gain_s` per task is WITHIN BAND |
 | Weighted normalised score of decode, prefill and concurrency | Weights not tied to what a task spends | Seconds saved per task: time per unit x units per task, measured (`workload-weighting.md`) |
 | Coherence check (finish reason, repetition) | Coherent is not identical; it misses a changed token | The measure command judges quality with the strict identity or closeness judge against the accepted capture; FAIL is a loss, INCONCLUSIVE never a win |
 | Keeps each winning change at once | Two changes that each win can lose together | Winners go to a passed set; `adopt` runs them together against a same-run reference; adopted only if no metric is worse and the set saves at least 97 % of the best single |

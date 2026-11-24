@@ -34,7 +34,7 @@ optimization window after this uses it.
 4. Write the rehearsal shaped on the workload (phase 0's long tail) and run it once on the standing configuration:
    its high-water marks are the reference every later memory line uses.
 5. Run the A/A: two boots (or two passes) of the unchanged build in one window; their spread is each speed metric's
-   band. On a small test machine, also check whether two boots of the same bytes give the same answers.
+   band where it exceeds the 1.6 % adoption cutoff, otherwise the cutoff is. On a small test machine, also check whether two boots of the same bytes give the same answers.
 6. Run the full check once on the test port, write the serving record, and move serving to the public port with
    `servedefault`. From now on a test window ends by the pair rule.
 7. CPU-test every judge and the driver (`tests/run_all.sh` shows the pattern: hand-worked expected values, never

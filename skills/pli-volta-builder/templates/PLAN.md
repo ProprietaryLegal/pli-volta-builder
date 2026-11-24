@@ -46,7 +46,7 @@ Numbered lines, each with its judge and what PASS / FAIL / INCONCLUSIVE mean. IN
   boot.
 - THE LINES (each against `off`'s same cells; a missing cell is INCONCLUSIVE; strict judges):
   - `<variant>` line a: <boot checks>; line b: <identity 7 of 7 / closeness thresholds>; line c: <speed floor with
-    its band>; line d: <memory: rehearsal at or under <MiB>, 0 out-of-memory lines>.
+    its band: max(1.6 % of the reference, the A/A spread)>; line d: <memory: rehearsal at or under <MiB>, 0 out-of-memory lines>.
 - PREDICTED: <figure per line, basis>.
 - NEVER MET A SERVER: <piece>: <what its failure does>.
 - ADOPTION: <adoptable by a later `adopt` boot / adopted now if `adopt` passes>.
